@@ -1,19 +1,71 @@
 from datetime import date, timedelta
 import random
 from sessions import Sessions
+from word import Word
+from random import randrange
 
 class Game:
-    v = 1
-    day = date.today() - timedelta(days=1)
-    word = "PATIO"
-    gameWords = list(map(lambda w: w.strip().upper(), open("palabras/list-unique-chars.txt", "r").readlines()))
-    validWords = list(map(lambda w: w.strip().upper(), open("palabras/list.txt", "r").readlines()))
+    gameWordsFile = "words/game.txt"
+    validWordsFile = "words/valid.txt"
+    gameWords = list()
+    validWords = list()
     sessions = Sessions()
     maxTries = 6
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+        ("ñ", "$")
+    )
 
-    def newWord(self):
-        self.word = random.choice(self.gameWords)
-        print(self.word)
+    def __init__(self):
+        self.loadWords()
+
+    def loadWords(self):
+        self.gameWords = list(map(lambda w: w.strip().upper(), open(self.gameWordsFile, "r").readlines()))
+        self.validWords = list(map(lambda w: w.strip().upper(), open(self.validWordsFile, "r").readlines()))
+
+    def getGameWords(self):
+        return self.gameWords
+
+    def normalize(self, s):
+        s = s.lower()
+        for a, b in self.replacements:
+            s = s.replace(a, b)
+        return s
+
+    def writeWords(self, words):
+        words = map(lambda w: w.strip().upper(), words)
+        words = filter(lambda w: len(w) == 5, words)
+        words = filter(lambda w: w not in self.validWords, words)
+        words = map(lambda w: self.normalize(w), words)
+        words = list(words)
+
+        if len(words) == 0:
+            return words
+
+        possible = open(self.gameWordsFile, 'a')
+        accepted = open(self.validWordsFile, 'a')
+
+        possible.write("\n".join(words) + "\n")
+        accepted.write("\n".join(words) + "\n")
+
+        possible.close()
+        accepted.close()
+        return words
+
+    def getRandomWord(self):
+        id = randrange(len(self.gameWords))
+        word = self.gameWords[id]
+        return Word(word, id)
+
+    def getWordById(self, id):
+        if not id.isnumeric():
+            raise Exception('Invalid id')
+        word = self.gameWords[int(id)]
+        return Word(word, id)
 
     def checkValidWord(self, word):
         return word in self.validWords
@@ -44,15 +96,7 @@ class Game:
                 l = l + 1
             k = k + 1
 
-        return word == input, out
+        return word == input, "".join(out)
 
-    def getWord(self):
-        self.refresh()
-        return self.word
-
-    def refresh(self):
-        if self.day < date.today():
-            self.newWord()
-            self.day = date.today()
-            self.v = self.v + 1
-            self.sessions = Sessions()
+    def getMaxTries(self):
+        return self.maxTries

@@ -1,28 +1,26 @@
 from datetime import date, timedelta
 import random
 import logging
+from word import Word
+from session import Session
 
 class Sessions:
-    session = {}
+    sessions = {}
 
-    def register(self, key, won, out):
-        if key not in self.session:
-            self.session[key] = {'won': False, 'history': []}
-            logging.info("New user " + str(key))
-        self.session[key]['history'].append(out)
-        self.session[key]['won'] = won
-        logging.info("User " + str(key) + " got " + out)
-
-    def hasWon(self, key):
-        if key not in self.session:
+    def hasActiveSession(self, key):
+        if key not in self.sessions:
             return False
-        return self.session[key]['won']
+        return self.sessions[key].isActive()
 
-    def getTries(self, key):
-        if key not in self.session:
-            return 0
-        else:
-            return len(self.session[key]['history'])
+    def getSession(self, key):
+        if key not in self.sessions:
+            raise Exception(str(key) + ' does not exist in memory.')
+        return self.sessions[key]
 
-    def getHistory(self, key):
-        return self.session[key]['history']
+    def newSession(self, key, word):
+        newSession = Session(key, word)
+        self.sessions[key] = newSession
+        return newSession
+
+    def restart(self):
+        self.sessions = {}
