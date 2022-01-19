@@ -10,7 +10,7 @@ from word import Word
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-updater = Updater(token='5064935067:AAHL2b0R4NUUFX4YDL7APlAqcQY6q2EflpY', use_context=True)
+updater = Updater(token='TELEGRAM_BOT_TOKEN', use_context=True)
 dispatcher = updater.dispatcher
 
 game = Game()
@@ -60,7 +60,7 @@ def tryWord(update: Update, context: CallbackContext):
     wordId = session.getWord().id
 
     won, out = game.checkWord(word, input)
-    lost = (session.getNumTries() + 1) == game.getMaxTries()
+    lost = (session.getTries() + 1) == game.getMaxTries()
     session.register(input, out, won, lost)
     logging.info("TRY " + str(uuid) + " " + word + " " + input + " " + out)
 
@@ -68,17 +68,17 @@ def tryWord(update: Update, context: CallbackContext):
         if lost:
             context.bot.send_message(chat_id=uuid, text="La palabra era: " + word)
         out_text = "¡Ganaste!" if won else "¡Perdiste!"
-        out_text += " " + str(session.getNumTries()) + "/" + str(game.maxTries)
+        out_text += " " + str(session.getTries()) + "/" + str(game.maxTries)
         out_text += "\n" + "\n".join(session.getOutputs())
-        out_text += "\n\n🕹️🎮: @ChupiLeBot"
-        out_text += "\n🍀: " + str(session.getAllTries())
+        out_text += "\n❌: " + str(session.getInvalidTries()) + " palabras"
         out_text += "\n⌛: " + str(session.getTime())
+        out_text += "\n\n🕹️🎮: @ChupiLeBot"
         out_text += "\nJuega la misma palabra con <a href='http://telegram.me/chupiLeBot?start=" + str(wordId) + "'>/start " + str(wordId) + "</a>"
         context.bot.send_message(chat_id=uuid, text=out_text, parse_mode=ParseMode.HTML)
         context.bot.send_message(chat_id=uuid, text="Se ha cargado una nueva palabra, ¡puedes seguir jugando!")
     else:
         out_text = "<code>" + session.getVerbose() + "</code>"
-        out_text += "\nIntento " + str(session.getNumTries()) + " de " + str(game.maxTries)
+        out_text += "\nIntento " + str(session.getTries()) + " de " + str(game.maxTries)
         context.bot.send_message(chat_id=uuid, text=out_text, parse_mode=ParseMode.HTML)
 
 

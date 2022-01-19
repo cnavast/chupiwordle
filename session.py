@@ -25,11 +25,11 @@ class Session:
     def addTry(self):
         self.allTries = self.allTries + 1
 
-    def getNumTries(self):
+    def getTries(self):
         return len(self.inputs)
 
-    def getAllTries(self):
-        return self.allTries
+    def getInvalidTries(self):
+        return self.allTries - self.getTries()
 
     def getWord(self):
         return self.word
