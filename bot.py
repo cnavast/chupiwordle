@@ -6,11 +6,13 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from game import Game
 from word import Word
+from secretRepository import SecretRepository
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-updater = Updater(token='5064935067:AAE1cJJrcBiVC7zH0Vmb9sAMnyKF7aP9OdY', use_context=True)
+secrets = SecretRepository()
+updater = Updater(token=secrets.token, use_context=True)
 dispatcher = updater.dispatcher
 
 game = Game()
