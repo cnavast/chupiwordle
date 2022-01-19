@@ -10,7 +10,7 @@ from word import Word
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-updater = Updater(token='5064935067:AAGnla1EfnHvshkOC4beary6WPJ9AchUV_A', use_context=True)
+updater = Updater(token='5064935067:AAE1cJJrcBiVC7zH0Vmb9sAMnyKF7aP9OdY', use_context=True)
 dispatcher = updater.dispatcher
 
 game = Game()
@@ -53,7 +53,7 @@ def tryWord(update: Update, context: CallbackContext):
     session.addTry()
 
     if game.checkValidWord(input) is False:
-        context.bot.send_message(chat_id=uuid, text="Esta palabra no es válida.")
+        context.bot.send_message(chat_id=uuid, text="❌ Esta palabra no es válida. \nLlevas " + str(session.getInvalidTries()) + " inválidas.")
         return
 
     word = session.getWord().word
