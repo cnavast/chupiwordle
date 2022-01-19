@@ -50,4 +50,4 @@ class Session:
         minutes = math.floor(total_seconds / 60)
         seconds = math.floor(total_seconds - 60 * minutes)
         decimal = math.floor(10 * (total_seconds - 60 * minutes - seconds))
-        return str(minutes) + 'm ' + str(seconds) + '.' + str(decimal) + 's'
+        return str(minutes) + 'm' + str(seconds) + '.' + str(decimal) + 's'
