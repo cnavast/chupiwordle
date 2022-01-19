@@ -1,5 +1,5 @@
 # chupiwordle
-Telegram bot game based on wordle.
+Telegram bot game based on wordle. Requires Python 3.
 ## Dependencies
 ### python-telegram-bot
 https://github.com/python-telegram-bot/python-telegram-bot
