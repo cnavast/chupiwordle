@@ -2,75 +2,25 @@ from datetime import date, timedelta
 import random
 from sessions import Sessions
 from word import Word
-from random import randrange
+from wordRepository import WordRepository
 
 class Game:
-    gameWordsFile = "words/game.txt"
-    validWordsFile = "words/valid.txt"
-    gameWords = list()
-    validWords = list()
+    wordRepository = WordRepository()
     sessions = Sessions()
     maxTries = 6
-    replacements = (
-        ("á", "a"),
-        ("é", "e"),
-        ("í", "i"),
-        ("ó", "o"),
-        ("ú", "u"),
-        ("ñ", "$")
-    )
-
-    def __init__(self):
-        self.loadWords()
-
-    def loadWords(self):
-        self.gameWords = list(map(lambda w: w.strip().upper(), open(self.gameWordsFile, "r").readlines()))
-        self.validWords = list(map(lambda w: w.strip().upper(), open(self.validWordsFile, "r").readlines()))
-
-    def getGameWords(self):
-        return self.gameWords
-
-    def normalize(self, s):
-        s = s.lower()
-        for a, b in self.replacements:
-            s = s.replace(a, b)
-        return s
-
-    def writeWords(self, words):
-        words = map(lambda w: w.strip().upper(), words)
-        words = filter(lambda w: len(w) == 5, words)
-        words = filter(lambda w: w not in self.validWords, words)
-        words = map(lambda w: self.normalize(w), words)
-        words = list(words)
-
-        if len(words) == 0:
-            return words
-
-        possible = open(self.gameWordsFile, 'a')
-        accepted = open(self.validWordsFile, 'a')
-
-        possible.write("\n".join(words) + "\n")
-        accepted.write("\n".join(words) + "\n")
-
-        possible.close()
-        accepted.close()
-        return words
-
-    def getRandomWord(self):
-        id = randrange(len(self.gameWords))
-        word = self.gameWords[id]
-        return Word(word, id)
 
     def getWordById(self, id):
-        if not id.isnumeric():
-            raise Exception('Invalid id')
-        word = self.gameWords[int(id)]
-        return Word(word, id)
-
+        return self.wordRepository.getWordById(id)
+        
     def checkValidWord(self, word):
-        return word in self.validWords
+        return self.wordRepository.checkValidWord(word)
 
-    # Returns a flag indicating if the word is correct & the positions.
+    def writeWords(self, words):
+        return self.wordRepository.writeWords(words)
+
+    def getRandomWord(self):
+        return self.wordRepository.getRandomWord()
+
     @staticmethod
     def checkWord(word, input):
         out = ["⬛", "⬛", "⬛", "⬛", "⬛"]

@@ -88,12 +88,11 @@ def add(update: Update, context: CallbackContext):
     uuid = update.effective_chat.id
     words = update.message.text[5:].split(',')
     writtenWords = game.writeWords(words)
-    k = len(game.getGameWords())
-    game.loadWords()
+
     out = "Palabras añadidas:\n"
     for word in writtenWords:
-        out += word + " ID: " + str(k) + "\n"
-        k = k + 1
+        out += word.word + " ID: " + str(word.id) + "\n"
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=out, parse_mode=ParseMode.HTML)
 
 start_handler = CommandHandler('start', start)
