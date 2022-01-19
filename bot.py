@@ -72,7 +72,7 @@ def tryWord(update: Update, context: CallbackContext):
         out_text = "¡Ganaste!" if won else "¡Perdiste!"
         out_text += " " + str(session.getTries()) + "/" + str(game.maxTries)
         out_text += "\n" + "\n".join(session.getOutputs())
-        out_text += "\n❌: " + str(session.getInvalidTries()) + " palabra" + ("s" if session.getInvalidTries() != 1 else "")
+        out_text += "\n❌: " + str(session.getInvalidTries()) + " inválida" + ("s" if session.getInvalidTries() != 1 else "")
         out_text += "\n⌛: " + str(session.getTime())
         out_text += "\n\n🕹️🎮: @ChupiLeBot"
         out_text += "\nJuega la misma palabra con <a href='http://telegram.me/chupiLeBot?start=" + str(wordId) + "'>/start " + str(wordId) + "</a>"
