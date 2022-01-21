@@ -9,8 +9,7 @@ class WordRepository:
         ("é", "e"),
         ("í", "i"),
         ("ó", "o"),
-        ("ú", "u"),
-        ("ñ", "$")
+        ("ú", "u")
     )
 
     gameWords = list()
