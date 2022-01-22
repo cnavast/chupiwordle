@@ -66,7 +66,7 @@ def tryWord(update: Update, context: CallbackContext):
     wordId = session.getWord().id
 
     won, out = game.checkWord(word, input)
-    lost = ((session.getTries() + 1) == game.getMaxTries() && won is False)
+    lost = ((session.getTries() + 1) == game.getMaxTries() and won is False)
     session.register(input, out, won, lost)
     logging.info("TRY " + str(uuid) + " " + username + " " + word + " " + input + " " + out)
 
