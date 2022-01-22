@@ -20,6 +20,8 @@ game = Game()
 def start(update: Update, context: CallbackContext):
     uuid = update.effective_chat.id
     input = update.message.text[7:]
+    username = str(update.message.chat.username)
+    fullname = str(update.message.chat.first_name) + " " + str(update.message.chat.last_name) + " (" + username + ")"
 
     if input.isnumeric():
         try:
@@ -36,11 +38,13 @@ def start(update: Update, context: CallbackContext):
 def tryWord(update: Update, context: CallbackContext):
     uuid = update.effective_chat.id
     input = update.message.text.upper()
+    username = str(update.message.chat.username)
+    fullname = str(update.message.chat.first_name) + " " + str(update.message.chat.last_name) + " (" + username + ")"
 
     if not game.sessions.hasActiveSession(uuid):
         word = game.getRandomWord()
         session = game.sessions.newSession(uuid, word)
-        logging.info("NEW " + str(uuid) + " " + word.word + " id: " + str(word.id))
+        logging.info("NEW " + str(uuid) + " " + fullname + " " + word.word + " id: " + str(word.id))
 
     try:
         session = game.sessions.getSession(uuid)
@@ -62,9 +66,9 @@ def tryWord(update: Update, context: CallbackContext):
     wordId = session.getWord().id
 
     won, out = game.checkWord(word, input)
-    lost = (session.getTries() + 1) == game.getMaxTries()
+    lost = ((session.getTries() + 1) == game.getMaxTries() && won is False)
     session.register(input, out, won, lost)
-    logging.info("TRY " + str(uuid) + " " + word + " " + input + " " + out)
+    logging.info("TRY " + str(uuid) + " " + username + " " + word + " " + input + " " + out)
 
     if won or lost:
         if lost:
