@@ -11,7 +11,7 @@ class Game:
 
     def getWordById(self, id):
         return self.wordRepository.getWordById(id)
-        
+
     def checkValidWord(self, word):
         return self.wordRepository.checkValidWord(word)
 
@@ -24,29 +24,26 @@ class Game:
     @staticmethod
     def checkWord(word, input):
         out = ["⬛", "⬛", "⬛", "⬛", "⬛"]
-        k = 0
-        for c in input:
-            if c == word[k]:
+        placeholder = "_"
+        won = word == input
+        input = list(input)
+        word = list(word)
+
+        for k, char in enumerate(input):
+            if char == word[k]:
                 out[k] = "🟩"
-                input = input[:k] + "_" + input[k + 1:]
-                word = word[:k] + "_" + word[k + 1:]
-            k = k + 1
+                input[k] = placeholder
+                word[k] = placeholder
 
-        k = 0
-        for c in input:
-            if c == "_":
-                k = k + 1
+        for k, char in enumerate(input):
+            if char == placeholder:
                 continue
-            l = 0
-            for d in word:
-                if c == d:
-                    word = word[:l] + "_" + word[l + 1:]
-                    out[k] = "🟨"
-                    break
-                l = l + 1
-            k = k + 1
 
-        return word == input, "".join(out)
+            if char in word:
+                word[word.index(input[k])] = placeholder
+                out[k] = "🟨"
+
+        return won, "".join(out)
 
     def getMaxTries(self):
         return self.maxTries
