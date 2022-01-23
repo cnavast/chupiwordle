@@ -40,7 +40,7 @@ class Game:
                 continue
 
             if char in word:
-                word[word.index(input[k])] = placeholder
+                word[word.index(char)] = placeholder
                 out[k] = "🟨"
 
         return won, "".join(out)
